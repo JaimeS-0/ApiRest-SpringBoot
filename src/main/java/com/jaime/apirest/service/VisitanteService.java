@@ -2,6 +2,7 @@ package com.jaime.apirest.service;
 
 
 import com.jaime.apirest.Dto.VisitanteDto;
+import com.jaime.apirest.Dto.VisitanteMapper;
 import com.jaime.apirest.model.Visitante;
 import com.jaime.apirest.repository.VisitanteRepository;
 import org.springframework.data.domain.Example;
@@ -14,28 +15,28 @@ import java.util.stream.Collectors;
 public class VisitanteService {
 
     private final VisitanteRepository visitanteRepository;
+    private final VisitanteMapper visitanteMapper;
 
-    public VisitanteService(VisitanteRepository visitanteRepository) {
+    public VisitanteService(VisitanteRepository visitanteRepository, VisitanteMapper visitanteMapper) {
         this.visitanteRepository = visitanteRepository;
+        this.visitanteMapper = visitanteMapper;
     }
-
-    // -------- CRUD básico --------
 
     public List<VisitanteDto> obtenerTodos() {
         return visitanteRepository.findAll().stream()
-                .map(this::convertirADto)
+                .map(visitanteMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public VisitanteDto obtenerPorId(Long id) {
         Visitante visitante = visitanteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Visitante no encontrado"));
-        return convertirADto(visitante);
+        return visitanteMapper.toDto(visitante);
     }
 
     public VisitanteDto crear(VisitanteDto dto) {
-        Visitante visitante = convertirAEntidad(dto);
-        return convertirADto(visitanteRepository.save(visitante));
+        Visitante visitante = visitanteMapper.toEntity(dto);
+        return visitanteMapper.toDto(visitanteRepository.save(visitante));
     }
 
     public VisitanteDto actualizar(Long id, VisitanteDto dto) {
@@ -44,50 +45,29 @@ public class VisitanteService {
         visitante.setNombre(dto.getNombre());
         visitante.setFechaNacimiento(dto.getFechaNacimiento());
         visitante.setEntradasCompradas(dto.getEntradasCompradas());
-        return convertirADto(visitanteRepository.save(visitante));
+        return visitanteMapper.toDto(visitanteRepository.save(visitante));
     }
 
     public void borrar(Long id) {
         visitanteRepository.deleteById(id);
     }
 
-    // -------- Métodos que llaman a los nombres del repositorio --------
-
     public List<VisitanteDto> buscarPorNombre(String nombre) {
         return visitanteRepository.findByNombreContainingIgnoreCase(nombre).stream()
-                .map(this::convertirADto)
+                .map(visitanteMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public List<VisitanteDto> buscarPorAtraccionId(Long atraccionId) {
         return visitanteRepository.buscarPorAtraccionId(atraccionId).stream()
-                .map(this::convertirADto)
+                .map(visitanteMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public List<VisitanteDto> buscarPorEjemplo(VisitanteDto ejemploDto) {
-        Visitante ejemplo = convertirAEntidad(ejemploDto);
+        Visitante ejemplo = visitanteMapper.toEntity(ejemploDto);
         return visitanteRepository.findAll(Example.of(ejemplo)).stream()
-                .map(this::convertirADto)
+                .map(visitanteMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    // -------- Métodos de conversión --------
-
-    private VisitanteDto convertirADto(Visitante visitante) {
-        return new VisitanteDto(
-                visitante.getNombre(),
-                visitante.getFechaNacimiento(),
-                visitante.getEntradasCompradas(),
-                null
-        );
-    }
-
-    private Visitante convertirAEntidad(VisitanteDto dto) {
-        Visitante visitante = new Visitante();
-        visitante.setNombre(dto.getNombre());
-        visitante.setFechaNacimiento(dto.getFechaNacimiento());
-        visitante.setEntradasCompradas(dto.getEntradasCompradas());
-        return visitante;
     }
 }

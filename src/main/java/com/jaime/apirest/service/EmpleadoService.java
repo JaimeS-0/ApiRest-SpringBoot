@@ -1,6 +1,7 @@
 package com.jaime.apirest.service;
 
 import com.jaime.apirest.Dto.EmpleadoDto;
+import com.jaime.apirest.Dto.EmpleadoMapper;
 import com.jaime.apirest.model.Empleado;
 import com.jaime.apirest.repository.EmpleadoRepository;
 import org.springframework.data.domain.Example;
@@ -13,28 +14,28 @@ import java.util.stream.Collectors;
 public class EmpleadoService {
 
     private final EmpleadoRepository empleadoRepository;
+    private final EmpleadoMapper empleadoMapper;
 
-    public EmpleadoService(EmpleadoRepository empleadoRepository) {
+    public EmpleadoService(EmpleadoRepository empleadoRepository, EmpleadoMapper empleadoMapper) {
         this.empleadoRepository = empleadoRepository;
+        this.empleadoMapper = empleadoMapper;
     }
-
-    // -------- CRUD básico --------
 
     public List<EmpleadoDto> obtenerTodos() {
         return empleadoRepository.findAll().stream()
-                .map(this::convertirADto)
+                .map(empleadoMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public EmpleadoDto obtenerPorId(Long id) {
         Empleado empleado = empleadoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
-        return convertirADto(empleado);
+        return empleadoMapper.toDto(empleado);
     }
 
     public EmpleadoDto crear(EmpleadoDto dto) {
-        Empleado empleado = convertirAEntidad(dto);
-        return convertirADto(empleadoRepository.save(empleado));
+        Empleado empleado = empleadoMapper.toEntity(dto);
+        return empleadoMapper.toDto(empleadoRepository.save(empleado));
     }
 
     public EmpleadoDto actualizar(Long id, EmpleadoDto dto) {
@@ -43,50 +44,29 @@ public class EmpleadoService {
         empleado.setNombre(dto.getNombre());
         empleado.setPuesto(dto.getPuesto());
         empleado.setFechaContratacion(dto.getFechaContratacion());
-        return convertirADto(empleadoRepository.save(empleado));
+        return empleadoMapper.toDto(empleadoRepository.save(empleado));
     }
 
     public void borrar(Long id) {
         empleadoRepository.deleteById(id);
     }
 
-    // -------- Métodos que llaman a los nombres del repositorio --------
-
     public List<EmpleadoDto> buscarPorPuesto(String puesto) {
         return empleadoRepository.findByPuesto(puesto).stream()
-                .map(this::convertirADto)
+                .map(empleadoMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public List<EmpleadoDto> buscarPorAtraccionId(Long atraccionId) {
         return empleadoRepository.buscarPorAtraccionId(atraccionId).stream()
-                .map(this::convertirADto)
+                .map(empleadoMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public List<EmpleadoDto> buscarPorEjemplo(EmpleadoDto ejemploDto) {
-        Empleado ejemplo = convertirAEntidad(ejemploDto);
+        Empleado ejemplo = empleadoMapper.toEntity(ejemploDto);
         return empleadoRepository.findAll(Example.of(ejemplo)).stream()
-                .map(this::convertirADto)
+                .map(empleadoMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    // -------- Conversión DTO <-> Entidad --------
-
-    private EmpleadoDto convertirADto(Empleado empleado) {
-        return new EmpleadoDto(
-                empleado.getNombre(),
-                empleado.getPuesto(),
-                empleado.getFechaContratacion(),
-                empleado.getAtraccion() != null ? empleado.getAtraccion().getId() : null
-        );
-    }
-
-    private Empleado convertirAEntidad(EmpleadoDto dto) {
-        Empleado empleado = new Empleado();
-        empleado.setNombre(dto.getNombre());
-        empleado.setPuesto(dto.getPuesto());
-        empleado.setFechaContratacion(dto.getFechaContratacion());
-        return empleado;
     }
 }
