@@ -1,0 +1,29 @@
+
+### Get - Obetener todas las atracciones
+GET localhost:9000/api/v1/atracciones
+
+### Get - Obtener una atraccion por id
+GET localhost:9000/api/v1/atracciones/1
+
+### Post - Crear una atraccion
+POST localhost:9000/api/v1/atracciones
+Content-Type: application/json
+
+{
+    "nombre": "Montaña Monumental",
+    "tipo": "Adrenalina Maxima Potencia",
+    "precio": 29.99,
+    "activa": true,
+    "fechaInauguracion": "2020-05-01"
+}
+
+
+
+### Put - Actualizar una atraccion
+PUT localhost:9000/api/v1/atracciones/1
+Content-Type: application/json
+
+
+
+### Delete - Eliminar una atraccion
+DELETE localhost:9000/api/v1/atracciones/3

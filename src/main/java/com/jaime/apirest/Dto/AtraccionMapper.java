@@ -8,6 +8,7 @@ public class AtraccionMapper {
 
     public AtraccionDto toDto(Atraccion atraccion) {
         return new AtraccionDto(
+                atraccion.getId(),
                 atraccion.getNombre(),
                 atraccion.getTipo(),
                 atraccion.getPrecio(),

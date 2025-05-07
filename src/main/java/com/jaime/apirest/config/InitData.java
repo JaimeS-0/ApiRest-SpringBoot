@@ -46,6 +46,13 @@ public class InitData implements CommandLineRunner {
         Atraccion atraccion2 = new Atraccion(null, "Carrusel", "Familiar", new BigDecimal("5.00"), true, LocalDate.of(2010, 4, 15), List.of(visitante2, visitante3), List.of(empleado3));
         atraccionRepository.saveAll(List.of(atraccion1, atraccion2));
 
+        // Nueva atracción SIN empleados ni visitantes (SE PUEDE BORRAR)
+        Atraccion a3 = new Atraccion(null, "Caballitos", "De Caballeria", new BigDecimal("10.00"), true, LocalDate.of(2010, 4, 15), null, null);
+        atraccionRepository.save(a3);
+        System.out.println("✅ Guardada atracción: ID = " + a3.getId() + ", Nombre = " + a3.getNombre());
+
+
+
         // Asociar atracciones a empleados
         empleado1.setAtraccion(atraccion1);
         empleado2.setAtraccion(atraccion1);

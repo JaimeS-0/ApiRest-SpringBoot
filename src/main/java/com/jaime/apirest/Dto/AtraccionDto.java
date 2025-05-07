@@ -7,6 +7,8 @@ import java.util.List;
 
 public class AtraccionDto {
 
+    private Long id;
+
     @NotBlank(message = "El nombre no puede estar vacío")
     private String nombre;
 
@@ -30,7 +32,8 @@ public class AtraccionDto {
     public AtraccionDto() {
     }
 
-    public AtraccionDto(String nombre, String tipo, BigDecimal precio, Boolean activa, LocalDate fechaInauguracion, List<Long> empleadosIds, List<Long> visitantesIds) {
+    public AtraccionDto( Long id, String nombre, String tipo, BigDecimal precio, Boolean activa, LocalDate fechaInauguracion, List<Long> empleadosIds, List<Long> visitantesIds) {
+        this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.precio = precio;

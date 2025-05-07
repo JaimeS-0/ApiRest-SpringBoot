@@ -43,6 +43,9 @@ public class Atraccion {
         this.empleados = empleados;
     }
 
+    public Atraccion(String carruselMágico, String familiar, BigDecimal bigDecimal, boolean b, LocalDate of) {
+    }
+
     // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
