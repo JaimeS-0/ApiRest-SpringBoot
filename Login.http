@@ -1,0 +1,31 @@
+
+### Login con usuario y contraseña
+POST http://localhost:9000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "usuario",
+  "password": "contraseña"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}
+
+### GET protegida de ejemplo
+GET http://localhost:9000/api/v1/atracciones
+Authorization: Bearer {{auth_token}}
+
+### DELETE protegida (requiere rol ADMIN)
+DELETE http://localhost:9000/api/v1/empleados/4
+Authorization: Bearer {{auth_token}}
+
+
+### POST protegida de Visitante (requiere USER o ADMIN)
+POST http://localhost:9000/api/v1/visitantes
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "nombre": "Visitante HTTP",
+  "fechaNacimiento": "1995-10-01",
+  "atraccionesIds": []
+}
