@@ -1,0 +1,35 @@
+
+
+### 1 - Empelado Obtener todos los empleados
+GET localhost:9000/api/v1/empleados
+
+### 2 - Get - Obtener un empleado por id
+GET localhost:9000/api/v1/empleados/1
+
+### 3 - Post - Crear un empleado
+POST localhost:9000/api/v1/empleados
+Content-Type: application/json
+
+{
+    "nombre": "Juan Perez",
+    "puesto": "Operador",
+    "fechaContratacion": "2022-05-10",
+    "atraccionId": 1
+}
+
+### 4 - Put - Actualizar un empleado
+PUT localhost:9000/api/v1/empleados/1
+Content-Type: application/json
+
+{
+    "nombre": "Laura Lopez",
+    "puesto": "Gerente",
+    "fechaContratacion": "2022-05-10",
+    "atraccionId": 1
+}
+
+### 5 - Delete - Eliminar un empleado
+DELETE localhost:9000/api/v1/empleados/4
+
+### 6 - Get - Buscar por puesto
+GET localhost:9000/api/v1/empleados/puesto/Supervisor

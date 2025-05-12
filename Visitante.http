@@ -1,0 +1,33 @@
+
+
+### 1 - Empelado Obtener todos los visitantes
+GET localhost:9000/api/v1/visitantes
+
+### 2 - Get - Obtener un visitantes por id
+GET localhost:9000/api/v1/visitantes/1
+
+### 3 - Post - Crear un visitante
+POST localhost:9000/api/v1/visitantes
+Content-Type: application/json
+
+{
+  "nombre": "Carlos Díaz",
+  "fechaNacimiento": "1995-05-12",
+  "entradasCompradas": 3
+}
+
+### 4 - Put - Actualizar un visitante
+PUT localhost:9000/api/v1/visitantes/1
+Content-Type: application/json
+
+{
+  "nombre": "Carlos Díaz Actualizado",
+  "fechaNacimiento": "1995-05-12",
+  "entradasCompradas": 5
+}
+
+### 5 - Delete - Eliminar un visitante
+DELETE localhost:9000/api/v1/visitantes/4
+
+### 6 - Get - Buscar por puesto
+GET localhost:9000/api/v1/visitantes/nombre/Carlos

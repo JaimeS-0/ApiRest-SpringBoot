@@ -35,22 +35,36 @@ public class InitData implements CommandLineRunner {
         Visitante visitante3 = new Visitante(null, "Carlos Sánchez", LocalDate.of(1988, 1, 20), new BigDecimal("3"), null);
         visitanteRepository.saveAll(List.of(visitante1, visitante2, visitante3));
 
+        Visitante vPrueba = new Visitante(null, "Visitante Prueba Borrado", LocalDate.of(2000, 1, 1), null, null);
+        visitanteRepository.save(vPrueba);
+        System.out.println("✅ Visitante de prueba creado con ID: " + vPrueba.getId());
+
+        System.out.println("Los IDs de los visitantes son:" + visitante1.getId() + ", " + visitante2.getId() + ", " + visitante3.getId());
+
         // Empleados
         Empleado empleado1 = new Empleado(null, "Luis Torres", "Operador", LocalDate.of(2020, 3, 1), null, null);
         Empleado empleado2 = new Empleado(null, "Marta Ruiz", "Mantenimiento", LocalDate.of(2018, 7, 20), null, null);
         Empleado empleado3 = new Empleado(null, "Pedro López", "Supervisor", LocalDate.of(2019, 11, 5), null, null);
         empleadoRepository.saveAll(List.of(empleado1, empleado2, empleado3));
 
+        Empleado ePrueba = new Empleado(null,"Empleado Prueba Borrado", "Tester", LocalDate.of(2024, 5, 10), null, null);
+        empleadoRepository.save(ePrueba);
+        System.out.println("✅ Empleado de prueba creado con ID: " + ePrueba.getId());
+
+
+        System.out.println("Los IDs de los empleados son:" + empleado1.getId() + ", " + empleado2.getId() + ", " + empleado3.getId());
+
         // Atracciones
         Atraccion atraccion1 = new Atraccion(null, "Montaña Rusa", "Adrenalina", new BigDecimal("15.50"), true, LocalDate.of(2015, 6, 1), List.of(visitante1, visitante2), List.of(empleado1, empleado2));
         Atraccion atraccion2 = new Atraccion(null, "Carrusel", "Familiar", new BigDecimal("5.00"), true, LocalDate.of(2010, 4, 15), List.of(visitante2, visitante3), List.of(empleado3));
         atraccionRepository.saveAll(List.of(atraccion1, atraccion2));
 
+        System.out.println("Los IDs de las atracciones son:" + atraccion1.getId() + ", " + atraccion2.getId());
+
         // Nueva atracción SIN empleados ni visitantes (SE PUEDE BORRAR)
         Atraccion a3 = new Atraccion(null, "Caballitos", "De Caballeria", new BigDecimal("10.00"), true, LocalDate.of(2010, 4, 15), null, null);
         atraccionRepository.save(a3);
-        System.out.println("✅ Guardada atracción: ID = " + a3.getId() + ", Nombre = " + a3.getNombre());
-
+        System.out.println("✅ Guardada atracción Creada Manual: ID = " + a3.getId() + ", Nombre = " + a3.getNombre());
 
 
         // Asociar atracciones a empleados
