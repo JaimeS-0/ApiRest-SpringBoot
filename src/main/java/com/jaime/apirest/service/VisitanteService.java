@@ -3,6 +3,7 @@ package com.jaime.apirest.service;
 
 import com.jaime.apirest.Dto.VisitanteDto;
 import com.jaime.apirest.Dto.VisitanteMapper;
+import com.jaime.apirest.exception.VisitanteNotFoundException;
 import com.jaime.apirest.model.Visitante;
 import com.jaime.apirest.repository.VisitanteRepository;
 import org.springframework.data.domain.Example;
@@ -30,7 +31,7 @@ public class VisitanteService {
 
     public VisitanteDto obtenerPorId(Long id) {
         Visitante visitante = visitanteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visitante no encontrado"));
+                .orElseThrow(() -> new VisitanteNotFoundException("No se encontro el visitante con ID " + id));
         return visitanteMapper.toDto(visitante);
     }
 
@@ -41,7 +42,7 @@ public class VisitanteService {
 
     public VisitanteDto actualizar(Long id, VisitanteDto dto) {
         Visitante visitante = visitanteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visitante no encontrado"));
+                .orElseThrow(() -> new VisitanteNotFoundException("No se encontró el visitante con ID " + id));
         visitante.setNombre(dto.getNombre());
         visitante.setFechaNacimiento(dto.getFechaNacimiento());
         visitante.setEntradasCompradas(dto.getEntradasCompradas());
@@ -49,6 +50,9 @@ public class VisitanteService {
     }
 
     public void borrar(Long id) {
+        if (!visitanteRepository.existsById(id)) {
+            throw new VisitanteNotFoundException("Visitante con ID " + id + " no existe, no se puede borrar");
+        }
         visitanteRepository.deleteById(id);
     }
 

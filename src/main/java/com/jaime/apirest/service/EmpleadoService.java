@@ -2,6 +2,7 @@ package com.jaime.apirest.service;
 
 import com.jaime.apirest.Dto.EmpleadoDto;
 import com.jaime.apirest.Dto.EmpleadoMapper;
+import com.jaime.apirest.exception.EmpleadoNotFoundException;
 import com.jaime.apirest.model.Empleado;
 import com.jaime.apirest.repository.EmpleadoRepository;
 import org.springframework.data.domain.Example;
@@ -29,7 +30,7 @@ public class EmpleadoService {
 
     public EmpleadoDto obtenerPorId(Long id) {
         Empleado empleado = empleadoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+                .orElseThrow(() -> new EmpleadoNotFoundException("No se encontro el empeado con ID " + id));
         return empleadoMapper.toDto(empleado);
     }
 
@@ -40,14 +41,16 @@ public class EmpleadoService {
 
     public EmpleadoDto actualizar(Long id, EmpleadoDto dto) {
         Empleado empleado = empleadoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
-        empleado.setNombre(dto.getNombre());
+                .orElseThrow(() -> new EmpleadoNotFoundException("No se encontro el empleado con ID " + id));
         empleado.setPuesto(dto.getPuesto());
         empleado.setFechaContratacion(dto.getFechaContratacion());
         return empleadoMapper.toDto(empleadoRepository.save(empleado));
     }
 
     public void borrar(Long id) {
+        if (!empleadoRepository.existsById(id)) {
+            throw new EmpleadoNotFoundException("Empleado con ID" + id + " no existe, no se puede borrar");
+        }
         empleadoRepository.deleteById(id);
     }
 

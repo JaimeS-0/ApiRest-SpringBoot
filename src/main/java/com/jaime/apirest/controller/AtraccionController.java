@@ -2,6 +2,11 @@ package com.jaime.apirest.controller;
 
 import com.jaime.apirest.Dto.AtraccionDto;
 import com.jaime.apirest.service.AtraccionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +29,15 @@ public class AtraccionController {
         List<AtraccionDto> lista = atraccionService.obtenerTodas();
         return ResponseEntity.ok(lista);
     }
+
+    @Operation(summary = "Busca una atracción por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Atracción encontrada",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AtraccionDto.class))),
+            @ApiResponse(responseCode = "404", description = "No se ha encontrado la atracción",
+                    content = @Content)
+    })
 
     @GetMapping("/{id}")
     public ResponseEntity<AtraccionDto> obtenerPorId(@PathVariable Long id) {

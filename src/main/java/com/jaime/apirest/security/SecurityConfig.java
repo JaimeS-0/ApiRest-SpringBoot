@@ -46,6 +46,19 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(2)
+    public SecurityFilterChain openapiFilterChain(HttpSecurity http) throws Exception {
+        String[] apiPaths = {"/swagger-ui/**", "/api-docs/**"};
+        http
+                .securityMatcher(apiPaths)
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(apiPaths).permitAll()
+                        .anyRequest().authenticated());
+        return http.build();
+    }
+
+    @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user = User.builder()
                 .username("usuario")

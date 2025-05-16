@@ -3,6 +3,7 @@ package com.jaime.apirest.service;
 
 import com.jaime.apirest.Dto.AtraccionDto;
 import com.jaime.apirest.Dto.AtraccionMapper;
+import com.jaime.apirest.exception.AtraccionNotFoundException;
 import com.jaime.apirest.model.Atraccion;
 import com.jaime.apirest.repository.AtraccionRepository;
 import org.springframework.data.domain.Example;
@@ -31,7 +32,7 @@ public class AtraccionService {
 
     public AtraccionDto obtenerPorId(Long id) {
         Atraccion atraccion = atraccionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Atracción no encontrada"));
+                .orElseThrow(() -> new AtraccionNotFoundException("No se encontro la atraccion con ID " + id));
         return atraccionMapper.toDto(atraccion);
     }
 
@@ -52,6 +53,9 @@ public class AtraccionService {
     }
 
     public void borrar(Long id) {
+        if (!atraccionRepository.existsById(id)) {
+            throw new AtraccionNotFoundException("Atraccion con ID " + " no existe, no se puede borrar");
+        }
         atraccionRepository.deleteById(id);
     }
 

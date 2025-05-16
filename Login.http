@@ -10,6 +10,7 @@ Content-Type: application/json
 
 > {% client.global.set("auth_token", response.body.token); %}
 
+
 ### GET protegida de ejemplo
 GET http://localhost:9000/api/v1/atracciones
 Authorization: Bearer {{auth_token}}
@@ -29,3 +30,4 @@ Authorization: Bearer {{auth_token}}
   "fechaNacimiento": "1995-10-01",
   "atraccionesIds": []
 }
+
