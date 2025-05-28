@@ -1,0 +1,13 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+### eeee
+
+POST http://localhost:9000/graphql
+Content-Type: application/json
+
+{
+  "query": "{ atracciones { id nombre tipo precio activa fechaInaguracion} }"
+}
+

@@ -22,8 +22,37 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SecurityConfig {
 
+
     @Bean
     @Order(1)
+    public SecurityFilterChain graphqlFilterChain(HttpSecurity http) throws Exception {
+        String[] apiPaths = {"/graphql/**" };
+        http
+                .securityMatcher(apiPaths)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(apiPaths).permitAll()
+                        .anyRequest().authenticated());
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain openapiFilterChain(HttpSecurity http) throws Exception {
+        String[] apiPaths = {"/swagger-ui/**", "/api-docs/**"};
+        http
+                .securityMatcher(apiPaths)
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(apiPaths).permitAll()
+                        .anyRequest().authenticated());
+        return http.build();
+    }
+
+    @Bean
+    @Order(3)
     public SecurityFilterChain apiFilterChain(HttpSecurity http,
                                               JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 
@@ -45,18 +74,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    @Order(2)
-    public SecurityFilterChain openapiFilterChain(HttpSecurity http) throws Exception {
-        String[] apiPaths = {"/swagger-ui/**", "/api-docs/**"};
-        http
-                .securityMatcher(apiPaths)
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(apiPaths).permitAll()
-                        .anyRequest().authenticated());
-        return http.build();
-    }
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {

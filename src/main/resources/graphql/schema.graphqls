@@ -1,0 +1,19 @@
+scalar Date
+@specifiedBy(url:"https://tools.ietf.org/html/rfc3339")
+
+scalar BigDecimal
+@specifiedBy(url:"https://tools.ietf.org/html/rfc3339")
+
+
+type Atraccion {
+    id: ID!
+    nombre: String!
+    tipo: String
+    precio: BigDecimal
+    activa: Boolean
+    fechaInaguracion: Date
+}
+
+type Query {
+    atracciones: [Atraccion]
+}
