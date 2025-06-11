@@ -58,23 +58,20 @@ public class SecurityConfig {
 
     @Bean
     @Order(3)
-    public SecurityFilterChain apiFilterChain(HttpSecurity http,
-                                              JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
-
-        String[] apiPaths = {"/api/**"};
-
+    public SecurityFilterChain apiFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
         http
-                .securityMatcher(apiPaths)
-                .csrf(AbstractHttpConfigurer::disable)
+                .securityMatcher("/api/**")
+                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/v1/atracciones/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/v1/empleados/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/visitantes/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
